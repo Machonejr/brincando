@@ -4,18 +4,7 @@ const questions = [
     answers: ["Maputo", "Beira", "Nampula"],
     correctIndex: 0
   },
-  
-     {
-    question: "2 Qual é a capital de Moçambique?",
-    answers: ["Maputo", "Beira", "Nampula"],
-    correctIndex: 0
-  },
-     {
-    question: "3Qual é a capital de Moçambique?",
-    answers: ["Maputo", "Beira", "Nampula"],
-    correctIndex: 0
-  },
-    // Add more questions here...
+  // Add more questions here...
 ];
 
 let currentQuestion = 0;
