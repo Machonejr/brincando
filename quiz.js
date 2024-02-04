@@ -1,4 +1,6 @@
 let currentQuestion = 0;
+let countdown = 5;
+let timer;
 
 function fetchRandomQuestions() {
     // Replace this array with an API call to fetch random questions dynamically
@@ -20,9 +22,28 @@ function displayRandomQuestion() {
     questionElement.textContent = questions[currentQuestion].question;
     answerInput.value = "";
     resultElement.textContent = "";
+    countdown = 5;
+    updateTimer();
+
+    // Start the countdown
+    timer = setInterval(() => {
+        countdown--;
+        updateTimer();
+        if (countdown <= 0) {
+            clearInterval(timer);
+            displayCorrectAnswer();
+        }
+    }, 1000);
+}
+
+function updateTimer() {
+    const countdownElement = document.getElementById("countdown");
+    countdownElement.textContent = countdown;
 }
 
 function checkAnswer() {
+    clearInterval(timer);
+
     const resultElement = document.getElementById("result");
     const userAnswer = document.getElementById("answer-input").value.trim().split(',').map(item => item.trim());
     const correctAnswer = fetchRandomQuestions()[currentQuestion].correctAnswer;
@@ -34,6 +55,12 @@ function checkAnswer() {
     } else {
         resultElement.textContent = `Errado! A resposta correta é: ${correctAnswer.join(", ")}.`;
     }
+}
+
+function displayCorrectAnswer() {
+    const resultElement = document.getElementById("result");
+    const correctAnswer = fetchRandomQuestions()[currentQuestion].correctAnswer;
+    resultElement.textContent = `Tempo esgotado! A resposta correta é: ${correctAnswer.join(", ")}.`;
 }
 
 function nextQuestion() {
