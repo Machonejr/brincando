@@ -17,6 +17,7 @@ function displayRandomQuestion() {
     const questions = fetchRandomQuestions();
     const questionElement = document.getElementById("question");
     const answerInput = document.getElementById("answer-input");
+    const timerElement = document.getElementById("timer");
     const resultElement = document.getElementById("result");
 
     questionElement.textContent = questions[currentQuestion].question;
@@ -31,7 +32,7 @@ function displayRandomQuestion() {
         updateTimer();
         if (countdown <= 0) {
             clearInterval(timer);
-            displayCorrectAnswer();
+            displayNextQuestion();
         }
     }, 1000);
 }
@@ -53,19 +54,13 @@ function checkAnswer() {
     if (isCorrect) {
         resultElement.textContent = "Correto!";
     } else {
-        resultElement.textContent = `Errado! A resposta correta é: ${correctAnswer.join(", ")}.`;
+        resultElement.textContent = "Errado! Tente novamente na próxima pergunta.";
     }
 }
 
-function displayCorrectAnswer() {
-    const resultElement = document.getElementById("result");
-    const correctAnswer = fetchRandomQuestions()[currentQuestion].correctAnswer;
-    resultElement.textContent = `Tempo esgotado! A resposta correta é: ${correctAnswer.join(", ")}.`;
-}
-
-function nextQuestion() {
+function displayNextQuestion() {
     currentQuestion++;
-    if (currentQuestion < fetchRandomQuestions().length) {
+    if (currentQuestion < 16) {
         displayRandomQuestion();
     } else {
         document.getElementById("quiz-container").innerHTML = "<h2>Quiz Concluído!</h2>";
