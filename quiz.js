@@ -1,71 +1,91 @@
+const questions = [
+  {
+    question: "Qual é a capital de Moçambique?",
+    answers: ["Maputo", "Beira", "Nampula"],
+    correctIndex: 0
+  },
+  
+     {
+    question: "2 Qual é a capital de Moçambique?",
+    answers: ["Maputo", "Beira", "Nampula"],
+    correctIndex: 0
+  },
+     {
+    question: "3Qual é a capital de Moçambique?",
+    answers: ["Maputo", "Beira", "Nampula"],
+    correctIndex: 0
+  },
+    // Add more questions here...
+];
+
 let currentQuestion = 0;
-let countdown = 5;
 let timer;
 
-function fetchRandomQuestions() {
-    // Replace this array with an API call to fetch random questions dynamically
-    return [
-        {
-            question: "Cite 3 cidades de Moçambique.",
-            correctAnswer: ["Maputo", "Beira", "Nampula"],
-        },
-        // Add more questions as needed
-    ];
+function startQuiz() {
+  displayQuestion();
 }
 
-function displayRandomQuestion() {
-    const questions = fetchRandomQuestions();
-    const questionElement = document.getElementById("question");
-    const answerInput = document.getElementById("answer-input");
-    const timerElement = document.getElementById("timer");
-    const resultElement = document.getElementById("result");
+function displayQuestion() {
+  const questionElement = document.getElementById("question");
+  const answersElement = document.getElementById("answers");
+  const nextBtn = document.getElementById("next-btn");
 
-    questionElement.textContent = questions[currentQuestion].question;
-    answerInput.value = "";
-    resultElement.textContent = "";
-    countdown = 5;
-    updateTimer();
+  questionElement.textContent = questions[currentQuestion].question;
+  answersElement.innerHTML = "";
 
-    // Start the countdown
-    timer = setInterval(() => {
-        countdown--;
-        updateTimer();
-        if (countdown <= 0) {
-            clearInterval(timer);
-            displayNextQuestion();
-        }
-    }, 1000);
+  questions[currentQuestion].answers.forEach((answer, index) => {
+    const li = document.createElement("li");
+    li.textContent = answer;
+    li.onclick = () => checkAnswer(index);
+    answersElement.appendChild(li);
+  });
+
+  nextBtn.style.display = "none";
+  startTimer();
 }
 
-function updateTimer() {
-    const countdownElement = document.getElementById("countdown");
-    countdownElement.textContent = countdown;
-}
+function startTimer() {
+  let seconds = 5;
+  const timerElement = document.getElementById("timer");
 
-function checkAnswer() {
-    clearInterval(timer);
+  timer = setInterval(() => {
+    timerElement.textContent = `Tempo restante: ${seconds}s`;
 
-    const resultElement = document.getElementById("result");
-    const userAnswer = document.getElementById("answer-input").value.trim().split(',').map(item => item.trim());
-    const correctAnswer = fetchRandomQuestions()[currentQuestion].correctAnswer;
-
-    const isCorrect = correctAnswer.every((item, index) => userAnswer[index] && item.toLowerCase() === userAnswer[index].toLowerCase());
-
-    if (isCorrect) {
-        resultElement.textContent = "Correto!";
-    } else {
-        resultElement.textContent = "Errado! Tente novamente na próxima pergunta.";
+    if (seconds === 0) {
+      clearInterval(timer);
+      showNextButton();
     }
+
+    seconds--;
+  }, 1000);
 }
 
-function displayNextQuestion() {
-    currentQuestion++;
-    if (currentQuestion < 16) {
-        displayRandomQuestion();
-    } else {
-        document.getElementById("quiz-container").innerHTML = "<h2>Quiz Concluído!</h2>";
-    }
+function checkAnswer(selectedIndex) {
+  clearInterval(timer);
+
+  if (selectedIndex === questions[currentQuestion].correctIndex) {
+    alert("Resposta correta!");
+  } else {
+    alert("Resposta incorreta!");
+  }
+
+  showNextButton();
 }
 
-// Initialize the quiz
-displayRandomQuestion();
+function showNextButton() {
+  const nextBtn = document.getElementById("next-btn");
+  nextBtn.style.display = "block";
+}
+
+function nextQuestion() {
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    displayQuestion();
+  } else {
+    alert("Parabéns! Você concluiu o quiz.");
+  }
+}
+
+// Start the quiz when the page loads
+startQuiz();
